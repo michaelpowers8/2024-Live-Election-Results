@@ -51,5 +51,6 @@ DISCRETIONS:
   - One or more candidate vote counts decreasing
   - If the current total number of votes is 5,000,000 and the estimated reported number is 90%, and then at 5,500,000 total votes, the estimated reported number is 80%
   - If the average number of added votes per minute in a state for the last hour is 3,000 but then at 8:00 A.M., there are 75,000 votes added within one minute
+  - If the number of votes added for each candidate is about 50/50 in terms of percent, and then one candidate seems to gain 99%+ of the vote and have a massive total vote percent gain
   - The total number of votes is larger than the number of legally registered voters
 
