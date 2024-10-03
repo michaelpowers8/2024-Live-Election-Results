@@ -24,3 +24,18 @@ The swing states' detail tables will include the following extra information abo
 - Voting Percent of Trailing Candidate
 - Vote Count of Trailing Candidate
 - Estimated Reported Percent
+
+<!-- end of the list -->
+
+I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will be collecting county data include
+- Arizona
+- Georgia
+- Michigan
+- Nevada
+- North Carolina
+- Pennsylvania
+- Wisconsin
+
+<!-- end of the list -->
+
+The programs have been tested and function properly on https://www.cnn.com/election/2020/results/president 
