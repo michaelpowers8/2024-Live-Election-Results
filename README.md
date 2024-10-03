@@ -42,8 +42,13 @@ The programs have been tested and function properly on https://www.cnn.com/elect
 This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyon an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
 DISCRETIONS:
 - This data will be collected from https://www.cnn.com/election because they claim to collect their data directly from the Associated Press and their website is a lot easier to navigate and has a very user and computer friendly interface that collecting data will be easier.
+- The data currently as of 10/3/2024 is set to collect from 11/5/2024 until 11/12/2024, if there is still more counting, I will continue, but as it stands, that is what makes sense
 - The county results from swing states may vary slightly from the summarized data because the data collection is not perfectly in sync, so an update may occur between collections. Take those discrepancies with a grain of salt, they do not prove that CNN or anybody is directly fudging the numbers, it just proves my computer is working hard and slowing down.
 - The purpose of this project is to promote integrity and transparency in a process that many people do not believe to be honest. All of my code is purposely public, can be downloaded and used to ensure it does exactly what I advertise it to do.
 - All times in the data are CST, so if you live in a different time zone, make sure to take that into account while reading the data
-- IF there is anything truly suspicious in the numbers, spread the data discrepancy to as many people as possible!!!!!
-  - d
+- IF there is anything truly suspicious in the numbers, spread the data discrepancy to as many people as possible!!!!! Possible discrepancies include, but not limited to:
+  - One or more candidate vote counts decreasing
+  - If the current total number of votes is 5,000,000 and the estimated reported number is 90%, and then at 5,500,000 total votes, the estimated reported number is 80%
+  - If the average number of added votes per minute in a state for the last hour is 3,000 but then at 8:00 A.M., there are 75,000 votes added within one minute
+  - The total number of votes is larger than the number of legally registered voters
+
