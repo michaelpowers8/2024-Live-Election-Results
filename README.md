@@ -14,7 +14,7 @@ Each state's table will obtain the following information:
 
 <!-- end of the list -->
 
-The swing states' detail tables will include the following extra information about each county:
+The swing states' detail tables will include the following extra information about each COUNTY:
 - Name of the county
 - Date/Time data acquired
 - Leading Candidate
@@ -27,7 +27,7 @@ The swing states' detail tables will include the following extra information abo
 
 <!-- end of the list -->
 
-I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will be collecting county data include
+I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will likely be collecting county data include
 - Arizona
 - Georgia
 - Michigan
@@ -38,4 +38,9 @@ I can only provide county data for select swing states as my computer will strug
 
 <!-- end of the list -->
 
-The programs have been tested and function properly on https://www.cnn.com/election/2020/results/president 
+The programs have been tested and function properly on https://www.cnn.com/election/2020/results/president\
+This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyon an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
+DISCRETIONS:
+- This data will be collected from https://www.cnn.com/election because they claim to collect their data directly from the Associated Press and their website is a lot easier to navigate and has a very user and computer friendly interface that collecting data will be easier.
+- The county results from swing states may vary slightly from the summarized data because the data collection is not perfectly in sync, so an update may occur between collections. Take those discrepancies with a grain of salt, they do not prove that CNN or anybody is directly fudging the numbers, it just proves my computer is working hard and slowing down.
+- The purpose of this project is to promote integrity and transparency in a process that many people do not believe to be honest. All of my code is purposely public, can be downloaded and used to ensure it does exactly what I advertise it to do.
