@@ -27,7 +27,7 @@ The swing states' detail tables will include the following extra information abo
 
 <!-- end of the list -->
 
-I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will likely be collecting county data include
+I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will likely be collecting county data include:
 - Arizona
 - Georgia
 - Michigan
@@ -40,6 +40,7 @@ I can only provide county data for select swing states as my computer will strug
 
 The programs have been tested and function properly on https://www.cnn.com/election/2020/results/president\
 This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyon an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
+\
 DISCRETIONS:
 - This data will be collected from https://www.cnn.com/election because they claim to collect their data directly from the Associated Press and their website is a lot easier to navigate and has a very user and computer friendly interface that collecting data will be easier.
 - The data currently as of 10/3/2024 is set to collect from 11/5/2024 until 11/12/2024, if there is still more counting, I will continue, but as it stands, that is what makes sense
