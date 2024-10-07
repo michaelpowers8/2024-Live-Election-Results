@@ -5,11 +5,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 from datetime import datetime
 from warnings import filterwarnings
+from pandas import DataFrame
 from os import system
+from re import search
 filterwarnings('ignore')
 
 # WebDriver Chrome
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new")
+driver = webdriver.Chrome(options=options)
+county_names:list[str] = []
+county_results:dict[str,DataFrame] = {}
+columns:list[str] = ['Leading_Candidate','Vote_Percent_Leader','Vote_Count_Leader','Trailing_Candidate',
+                    'Vote_Percent_Trailer','Vote_Count_Trailer','Reported_Percent']
+first_iteration:bool = True
 
 # Target URL
 driver.get("https://www.cnn.com/election/2020/results/state/michigan/president")
@@ -18,9 +27,7 @@ right_arrow_image_source:str = "yaWdodCIgZD0iTTkuOTUyIDUuOTk0SDEuMzk1YS41OTUuNTk
 while True:
     system('cls')
     driver.refresh()
-    sleep(1)
     page:str = driver.find_element(By.XPATH, "/html/body").text
-    sleep(1)
     while True:
         try:
             # Locate all arrow buttons (left and right)
@@ -42,7 +49,6 @@ while True:
                 page += driver.find_element(By.XPATH, "/html/body").text
             else:
                 break
-
         except:
             break
     system('cls')
@@ -52,14 +58,44 @@ while True:
     lines:list[str] = page.split('\n')
     del page
     inside_county_numbers:bool = False
-    with open('State_Details/Michigan/CNN_Text.txt','a') as file:
-        file.write(f"UPDATE DATETIME: {extraction_time}\n")
-        for line in lines:
-            if("county result" in line.lower()):
-                inside_county_numbers:bool = True
-            if("Not all candidates are listed" in line):
-                inside_county_numbers:bool = False
-            if(inside_county_numbers):
-                file.write(f"{line}\n")
-        file.write('\n-----------------------------------------------------------------------------------------------------------\n')
+    final_lines:list[str] = []
+    current_county:str = ""
+    current_row:list = ['None']*len(columns)
+    for line in lines:
+        if("county result" in line.lower()):
+            inside_county_numbers:bool = True
+        if("Not all candidates are listed" in line):
+            inside_county_numbers:bool = False
+        if(inside_county_numbers):
+            final_lines.append(line)
+    for line in range(len(final_lines)):
+        if("Michigan County" in final_lines[line]):
+            pass
+        elif("County" in final_lines[line]):
+            current_county:str = final_lines[line][:final_lines[line].index('County')]
+            county_results[current_county] = DataFrame(data=None,columns=columns)
+        elif("Candidate % Vote" in final_lines[line]):
+            current_row[0] = 'Trump' if 'T' in final_lines[line+1] else 'Harris'
+            current_row[1] = final_lines[line+2].replace('%','').replace(',','')
+            current_row[2] = final_lines[line+3].replace('%','').replace(',','')
+            current_row[3] = 'Trump' if 'T' in final_lines[line+4] else 'Harris'
+            current_row[4] = final_lines[line+5].replace('%','').replace(',','')
+            current_row[5] = final_lines[line+6].replace('%','').replace(',','')
+            current_row[6] = search(r"[0-9]{1,}",final_lines[line+7]).group()
+            county_results[current_county].loc[extraction_time] = current_row
+            current_row:list = ['None']*len(columns)
+            
+    if(first_iteration):
+        first_iteration:bool = False
+        for key,item in county_results.items():
+            file_name:str = f'{key.replace(" ","_")}_County.csv'
+            item.to_csv(f'State_Details/Michigan/{file_name.replace("__","_")}',index=True,mode='a',header=True)
+        first_iteration:bool = False
+    else:
+        for key,item in county_results.items():
+            file_name:str = f'{key.replace(" ","_")}_County.csv'
+            item.to_csv(f'State_Details/Michigan/{file_name.replace("__","_")}',index=True,mode='a',header=False)
     system('cls')
+    
+columns:list[str] = ['Leading_Candidate','Vote_Percent_Leader','Vote_Count_Leader','Trailing_Candidate',
+                    'Vote_Percent_Trailer','Vote_Count_Trailer','Reported_Percent']
