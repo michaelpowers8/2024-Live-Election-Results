@@ -42,7 +42,9 @@ The programs have been tested and function properly on the following websites:
 - https://www.azcentral.com/elections/results/2024-11-05/race/0/arizona
 - https://www.nbcnews.com/politics/2024-elections/michigan-president-results
 - https://enr.elections.virginia.gov/results/public/Virginia/elections/2024NovemberGeneral/ballot-items/01000000-c7a0-1ae0-1363-08dcde4d9d9f
-This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyon an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
+- https://www.electionreturns.pa.gov/General/CountyBreakDownResults?officeId=1&districtId=1&ElectionID=105&ElectionType=G&IsActive=1&isRetention=0
+- https://www.foxnews.com/elections
+This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyone an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
 \
 DISCRETIONS:
 - This data will be collected from https://www.cnn.com/election because they claim to collect their data directly from the Associated Press and their website is a lot easier to navigate and has a very user and computer friendly interface that collecting data will be easier.
