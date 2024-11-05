@@ -1,102 +1,73 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver import Chrome,ChromeOptions
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 from datetime import datetime
-from warnings import filterwarnings
 from pandas import DataFrame
-from os import system
+from random import random
 from re import search
-filterwarnings('ignore')
+from time import sleep
 
 # WebDriver Chrome
-options = webdriver.ChromeOptions()
-options.add_argument("--headless=new")
-driver = webdriver.Chrome(options=options)
-county_names:list[str] = []
-county_results:dict[str,DataFrame] = {}
-columns:list[str] = ['Leading_Candidate','Vote_Percent_Leader','Vote_Count_Leader','Trailing_Candidate',
-                    'Vote_Percent_Trailer','Vote_Count_Trailer','Reported_Percent']
+options = ChromeOptions()
+options.add_argument('--headless=new')
+# adding argument to disable the AutomationControlled flag 
+options.add_argument("--disable-blink-features=AutomationControlled") 
+# exclude the collection of enable-automation switches 
+options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
+# turn-off userAutomationExtension 
+options.add_experimental_option("useAutomationExtension", False) 
+driver = Chrome(options=options)
+driver.get(f"https://www.electionreturns.pa.gov/General/CountyBreakDownResults?officeId=1&districtId=1&ElectionID=105&ElectionType=G&IsActive=1&isRetention=0")
+
+county_results:dict[str,list] = {}
 first_iteration:bool = True
 
-# Target URL
-driver.get("https://www.cnn.com/election/2020/results/state/pennsylvania/president")
-driver.maximize_window()
-right_arrow_image_source:str = "yaWdodCIgZD0iTTkuOTUyIDUuOTk0SDEuMzk1YS41OTUuNTk1IDAgMSAxIDAtMS4xOWg4LjU1N2wtMy4yMTgtMy4xOWEuNTkyLjU5MiAwIDAgMSAwLS44NC42MDYuNjA2IDAgMCAxIC44NDkgMGw0LjI0MiA0LjIwNWEuNTkzLjU5MyAwIDAgMSAwIC44NDJsLTQuMjQyIDQuMjA1YS42MDYuNjA2IDAgMCAxLS44NSAwIC41OTMuNTkzIDAgMCAxIDAtLjg0MWwzLjIyLTMuMTl6Ii8+CiAgICA8L2RlZnM+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiPgogICAgICAgIDx1c2UgZmlsbD0iIzRENEQ0RCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNSA3KSIgeGxpbms6aHJlZj0iI2EtYXJyb3ctcmlnaHQiLz4KICAgICAgICA8Y2lyY2xlIGN4PSIxMi41IiBjeT0iMTIuNSIgcj0iMTIuNSIgc3Ryb2tlPSIjNEQ0RDREIi8+CiAgICA8L2c+Cjwvc3ZnPgo="
 while True:
-    system('cls')
     driver.refresh()
-    page:str = driver.find_element(By.XPATH, "/html/body").text
-    while True:
-        try:
-            # Locate all arrow buttons (left and right)
-            arrow_buttons = WebDriverWait(driver, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.paginationstyles__Arrow-sc-58lau4-1.kxnBsH img'))
-            )
-
-            # Loop through the buttons and find the right arrow by comparing its src attribute
-            right_arrow_button = None
-            for arrow_button in arrow_buttons:
-                # Check if the current button's image source matches the right arrow image
-                if right_arrow_image_source[:20] in arrow_button.get_attribute("src"):
-                    right_arrow_button = arrow_button
-                    break
-
-            # If the right arrow is found, click the button
-            if right_arrow_button:
-                right_arrow_button.click()
-                page += driver.find_element(By.XPATH, "/html/body").text
-            else:
-                break
-        except:
-            break
-    system('cls')
-    extraction_time = datetime.now()
-    if(extraction_time.month>=11 and extraction_time.day>=10 and extraction_time.hour>=23 and extraction_time.minute>=59):
-        break
+    sleep(random()*42.4321987+random()*19.312087+5.192837)
+    wait:WebDriverWait = WebDriverWait(driver,(random()*4)+2)
+    page:str = wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "/html/body"))).text
+    extraction_time:datetime = datetime.now()
+    print(extraction_time.strftime('%D, %H:%M:%S.%f'))
     lines:list[str] = page.split('\n')
-    del page
-    inside_county_numbers:bool = False
-    final_lines:list[str] = []
-    current_county:str = ""
-    current_row:list = ['None']*len(columns)
-    for line in lines:
-        if("county result" in line.lower()):
-            inside_county_numbers:bool = True
-        if("Not all candidates are listed" in line):
-            inside_county_numbers:bool = False
-        if(inside_county_numbers):
-            final_lines.append(line)
-    for line in range(len(final_lines)):
-        if("Pennsylvania County" in final_lines[line]):
-            pass
-        elif("County" in final_lines[line]):
-            current_county:str = final_lines[line][:final_lines[line].index('County')]
-            county_results[current_county] = DataFrame(data=None,columns=columns)
-        elif("Candidate % Vote" in final_lines[line]):
-            extraction_time = datetime.now()
-            current_row[0] = 'Trump' if 'T' in final_lines[line+1] else 'Harris'
-            current_row[1] = final_lines[line+2].replace('%','').replace(',','')
-            current_row[2] = final_lines[line+3].replace('%','').replace(',','')
-            current_row[3] = 'Trump' if 'T' in final_lines[line+4] else 'Harris'
-            current_row[4] = final_lines[line+5].replace('%','').replace(',','')
-            current_row[5] = final_lines[line+6].replace('%','').replace(',','')
-            current_row[6] = search(r"[0-9]{1,}",final_lines[line+7]).group()
-            county_results[current_county].loc[extraction_time] = current_row
-            current_row:list = ['None']*len(columns)
-            
-    if(first_iteration):
-        first_iteration:bool = False
-        for key,item in county_results.items():
-            file_name:str = f'{key.replace(" ","_")}_County.csv'
-            item.to_csv(f'State_Details/Pennsylvania/{file_name.replace("__","_")}',index=True,mode='a',header=True)
-        first_iteration:bool = False
+    # PENNSYLVANIA COUNTY RESULTS
+    counties_found:bool = False
+    for i,line in enumerate(lines):
+        if(line.upper().__eq__(line) and not(counties_found)):
+            counties_found:bool = True
+        if(
+            (line.upper().__eq__(line))and 
+            (counties_found)and 
+            (not('KAMALA' in line))and
+            (not('TRUMP' in line))and
+            (not('CHASE OLIVER' in line))and
+            (not('JILL STEIN' in line))and
+            (not('PRIVACY POLICY' in line))and
+            (not('COPYRIGHT' in line))and
+            (not('COMMONWEALTH' in line))and
+            (not('SECURITY POLICY' in line))and
+            (not('TESTING MODE' in line))and
+            (not(line.isspace()))and
+            (len(line)>0)
+        ):
+            county_results[line] = [
+                [
+                    extraction_time,
+                    float(search(r"[0-9]{1,3}\.[0-9]{1,2}\%",lines[i+4]).group().replace('%','')), # Kamala Harris Vote Percent
+                    int(search(r"Votes: .+",lines[i+4]).group().replace('%','').replace(',','').replace('Votes:','').replace(' ','').replace('(','').replace(')','')), # Kamala Harris Vote Count
+                    float(search(r"[0-9]{1,3}\.[0-9]{1,2}\%",lines[i+7]).group().replace('%','')), # Donald Trump Vote Percent
+                    int(search(r"Votes: .+",lines[i+7]).group().replace('%','').replace(',','').replace('Votes:','').replace(' ','').replace('(','').replace(')','')) # Donald Trump Vote Count
+                ] 
+                                            ]
+    if(first_iteration): 
+        for key in county_results.keys():
+            DataFrame(county_results[key],columns=['Extraction_Datetime','KH_Vote_Pct','KH_Vote_Count','DT_Vote_Pct','DT_Vote_Count']).set_index('Extraction_Datetime').to_csv(
+                f"State_Details/Pennsylvania/{key.upper().replace(' ','_')}_Results.csv",header=True,index=True,float_format='%.4f',mode='w') 
+        first_iteration:bool = False  
     else:
-        for key,item in county_results.items():
-            file_name:str = f'{key.replace(" ","_")}_County.csv'
-            item.to_csv(f'State_Details/Pennsylvania/{file_name.replace("__","_")}',index=True,mode='a',header=False)
-    system('cls')
-    
-columns:list[str] = ['Leading_Candidate','Vote_Percent_Leader','Vote_Count_Leader','Trailing_Candidate',
-                    'Vote_Percent_Trailer','Vote_Count_Trailer','Reported_Percent']
+        for key in county_results.keys():
+            DataFrame(county_results[key],columns=['Extraction_Datetime','KH_Vote_Pct','KH_Vote_Count','DT_Vote_Pct','DT_Vote_Count']).set_index('Extraction_Datetime').to_csv(
+                f"State_Details/Pennsylvania/{key.upper().replace(' ','_')}_Results.csv",header=False,index=True,float_format='%.4f',mode='a')

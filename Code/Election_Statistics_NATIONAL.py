@@ -1,135 +1,69 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver import Chrome,ChromeOptions
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 from datetime import datetime
-from re import search
 from pandas import DataFrame
-from os import system
-from warnings import filterwarnings
-filterwarnings('ignore')
+from random import random
+from re import findall
+from time import sleep
 
 # WebDriver Chrome
-options = webdriver.ChromeOptions()
-options.add_argument("--headless=new")
-driver = webdriver.Chrome(options=options)
+options = ChromeOptions()
+options.add_argument('--headless=new')
+# adding argument to disable the AutomationControlled flag 
+options.add_argument("--disable-blink-features=AutomationControlled") 
+# exclude the collection of enable-automation switches 
+options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
+# turn-off userAutomationExtension 
+options.add_experimental_option("useAutomationExtension", False)
+options.add_argument('--disable-extensions')
+options.add_argument('--profile-directory=Default')
+options.add_argument("--incognito")
+options.add_argument("--disable-plugins-discovery")
+options.add_argument("--start-maximized")
 
-state_names = ["Alaska", "Alabama", "Arkansas", "Arizona", "California", "Colorado", "Connecticut",
-            "District Of Columbia", "Delaware", "Florida", "Georgia", "Hawaii", "Iowa", "Idaho", "Illinois", 
-            "Indiana", "Kansas", "Kentucky", "Louisiana", "Massachusetts", "Maryland", "Maine", "Michigan", "Minnesota", 
-            "Missouri", "Mississippi", "Montana", "North Carolina", "North Dakota", "Nebraska", "New Hampshire", "New Jersey", 
-            "New Mexico", "Nevada", "New York", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", 
-            "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia", "Vermont", 
-            "Washington", "Wisconsin", "West Virginia", "Wyoming"]
+states:list[str] = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+               "District Of Columbia", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois",
+               "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", 
+               "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", 
+               "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", 
+               "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia", "Vermont", 
+               "Washington", "Wisconsin", "West Virginia", "Wyoming"]
 
-results:dict[str,DataFrame] = {}
-for state in state_names:
-    results[state] = DataFrame(data=None,columns=['Leading_Candidate','Vote_Percent_Leader','Vote_Count_Leader','Trailing_Candidate',
-                                                'Vote_Percent_Trailer','Vote_Count_Trailer','Reported_Percent'])
-
-# Target URL
-driver.get("https://www.cnn.com/election/2020/results/president")
-driver.maximize_window()
-
+driver:Chrome = Chrome(options=options)
+sleep(4.53298)
+driver.get("https://www.foxnews.com/elections")
+first_iteration:bool = True
+sleep(3.32382901)
 while True:
-    driver.refresh()
-    while True:
-        try:
-            show_more_button = driver.find_element(By.CLASS_NAME, "house-nationalsstyles__FullRaceDetails-sc-10qfp1h-7")
-            driver.execute_script("arguments[0].click();", show_more_button)
-            sleep(1)  # wait for the content to load
-        except Exception as e:
-            break
-    
-    # Printing the whole body text
-    page = driver.find_element(By.XPATH, "/html/body").text
-    extraction_time = datetime.now()
-    if(extraction_time.month>=11 and extraction_time.day>=10 and extraction_time.hour>=8 and extraction_time.minute>=0):
-        break
-    lines = page.split('\n')
-    del page
-    state_results_found:bool = False
-    current_state:str = 'None'
-    current_state_found:bool = False
-    current_state_leading_candidate:str = 'None'
-    current_state_leading_candidate_vote_percent:float = 0
-    current_state_leading_candidate_vote_count:int = 0
-    current_state_trailing_candidate:str = 'None'
-    current_state_trailing_candidate_vote_percent:float = 0
-    current_state_trailing_candidate_vote_count:int = 0
-    current_state_reported_percent:float = 0
-    for line in range(len(lines)):
-        if(not(state_results_found)):
-            if('STATE RESULTS' in lines[line]):
-                state_results_found = True
-        if(state_results_found):
-            if(not(current_state_found)):
-                for state in state_names:
-                    if(state in lines[line]):
-                        current_state = state
-                        current_state_found = True
-            if('Candidate % Votes' in lines[line]):
-                current_state_leading_candidate = lines[line+1]
-                if('trump' in current_state_leading_candidate.lower()):
-                    current_state_trailing_candidate = 'Harris'
+    sleep(random()*13.329104+11.430829)
+    wait:WebDriverWait = WebDriverWait(driver,(random()*4)+2)
+    page:str = wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "/html/body"))).text
+    lines:list[str] = page.split('\n')
+    extraction_time:datetime = datetime.now()
+    all_states_found:bool = False
+    for i,line in enumerate(lines):
+        if('All State Races' in line and 'Alaska' in lines[i+2] and '3' in lines[i+3]):
+            all_states_found:bool = True
+        if(all_states_found):
+            if(line in states):
+                current_row:list = [
+                        int(findall(r"[0-9]+",lines[i+5].replace(',','').replace('-','0'))[0]),
+                        float(findall(r"[0-9]+",lines[i+5].replace(',','').replace('-','0'))[1]),
+                        int(findall(r"[0-9]+",lines[i+8].replace(',','').replace('-','0'))[0]),
+                        float(findall(r"[0-9]+",lines[i+8].replace(',','').replace('-','0'))[1])
+                    ]
+                if(first_iteration):
+                    DataFrame([current_row],columns=['KH_Vote_Count','KH_Vote_Pct','DT_Vote_Count','DT_Vote_Pct'],index=[extraction_time])\
+                        .to_csv(f'State_Summary_Results/{line.replace("-","_").replace(" ","_")}_Results.csv',
+                                mode='w',header=True,index=True,float_format='%.3f')
                 else:
-                    current_state_trailing_candidate = 'Trump'
-            if(
-                (current_state_trailing_candidate_vote_percent==0)and 
-                (not(current_state_leading_candidate_vote_percent==0))and  
-                (search(r"[0-9]{1,}",lines[line]))and
-                ('%' in lines[line])
-                ):
-                current_state_trailing_candidate_vote_percent = float(lines[line].replace('%',''))
-            if(
-                (current_state_leading_candidate_vote_percent==0)and 
-                (search(r"[0-9]{1,}",lines[line]))and
-                ('%' in lines[line])
-                ):
-                current_state_leading_candidate_vote_percent = float(lines[line].replace('%',''))
-            if(
-                (current_state_trailing_candidate_vote_count==0)and 
-                (not(current_state_leading_candidate_vote_count==0))and 
-                (search(r'\d+(?:,\d+)?',lines[line]))and
-                (not('%' in lines[line]))and
-                (not('.' in lines[line]))and
-                (not(':' in lines[line]))and
-                (not('Elect' in lines[line]))and
-                (not(search(r"[A-Za-z]{1,}",lines[line])))
-                ):
-                current_state_trailing_candidate_vote_count = int(lines[line].replace(',',''))
-            if(
-                (current_state_trailing_candidate_vote_count==0)and 
-                (current_state_leading_candidate_vote_count==0)and 
-                (search(r'\d+(?:,\d+)?',lines[line]))and
-                (not('%' in lines[line]))and
-                (not('.' in lines[line]))and
-                (not(':' in lines[line]))and
-                (not('Elect' in lines[line]))and
-                (not(search(r"[A-Za-z]{1,}",lines[line])))
-                ):
-                current_state_leading_candidate_vote_count = int(lines[line].replace(',',''))
-            if('Est.'in lines[line]):
-                current_state_reported_percent = int(search(r"[0-9]{1,}",lines[line]).group())
-                results[current_state].loc[extraction_time] = [current_state_leading_candidate,current_state_leading_candidate_vote_percent,
-                                                            current_state_leading_candidate_vote_count,current_state_trailing_candidate,
-                                                            current_state_trailing_candidate_vote_percent,current_state_trailing_candidate_vote_count,
-                                                            current_state_reported_percent]
-                if(True):
-                    current_state_found = False
-                    current_state_leading_candidate = 'None'
-                    current_state_leading_candidate_vote_percent = 0
-                    current_state_leading_candidate_vote_count = 0
-                    current_state_trailing_candidate = 'None'
-                    current_state_trailing_candidate_vote_percent = 0
-                    current_state_trailing_candidate_vote_count = 0
-                    current_state_reported_percent = 0
-            if(
-                ('Not all candidates are listed' in lines[line])or
-                ('All times ET' in lines[line])
-              ):
-                break
-
-    for key,item in results.items():
-        item.to_csv(f"State_Summary_Results/{key}_Results.csv")
+                    DataFrame([current_row],columns=['KH_Vote_Count','KH_Vote_Pct','DT_Vote_Count','DT_Vote_Pct'],index=[extraction_time])\
+                        .to_csv(f'State_Summary_Results/{line.replace("-","_").replace(" ","_")}_Results.csv',
+                                mode='a',header=False,index=True,float_format='%.3f')
+        if('Sponsored Stories' in line and all_states_found):
+            break
+    first_iteration:bool = False
