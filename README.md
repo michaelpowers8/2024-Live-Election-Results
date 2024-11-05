@@ -27,7 +27,7 @@ The swing states' detail tables will include the following extra information abo
 
 <!-- end of the list -->
 
-I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will likely be collecting county data include:
+I can only provide county data for select swing states as my computer will struggle to handle all of this data coming in from several chrome tabs being open and analyzed simultaneously. The swing states that I will be collecting county data include:
 - Arizona
 - Georgia
 - Michigan
