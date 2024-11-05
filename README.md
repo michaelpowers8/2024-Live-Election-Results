@@ -43,13 +43,16 @@ The programs have been tested and function properly on the following websites:
 - https://www.nbcnews.com/politics/2024-elections/michigan-president-results
 - https://enr.elections.virginia.gov/results/public/Virginia/elections/2024NovemberGeneral/ballot-items/01000000-c7a0-1ae0-1363-08dcde4d9d9f
 - https://www.electionreturns.pa.gov/General/CountyBreakDownResults?officeId=1&districtId=1&ElectionID=105&ElectionType=G&IsActive=1&isRetention=0
-- https://www.foxnews.com/elections
+- https://www.foxnews.com/elections 
+
+<!-- end of the list -->
+
 This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyone an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
 \
 DISCRETIONS:
 - This data will be collected from https://www.cnn.com/election because they claim to collect their data directly from the Associated Press and their website is a lot easier to navigate and has a very user and computer friendly interface that collecting data will be easier.
-- The data currently as of 10/3/2024 is set to collect from 11/5/2024 until 11/12/2024, if there is still more counting, I will continue, but as it stands, that is what makes sense
-- The county results from swing states may vary slightly from the summarized data because the data collection is not perfectly in sync, so an update may occur between collections. Take those discrepancies with a grain of salt, they do not prove that CNN or anybody is directly fudging the numbers, it just proves my computer is working hard and slowing down.
+- The data currently is set to collect from 11/5/2024 until 11/12/2024. If there is still more counting, I will continue, but as it stands, that is what makes sense
+- The county results from swing states may vary slightly from the summarized data because the data collection is not perfectly in sync, so an update may occur between collections. Take those discrepancies with a grain of salt, they do not prove that Fox News or anybody is directly fudging the numbers, it just proves my computer is working hard and slowing down.
 - The purpose of this project is to promote integrity and transparency in a process that many people do not believe to be honest. All of my code is purposely public, can be downloaded and used to ensure it does exactly what I advertise it to do.
 - All times in the data are CST, so if you live in a different time zone, make sure to take that into account while reading the data
 - IF there is anything truly suspicious in the numbers, spread the data discrepancy to as many people as possible!!!!! Possible discrepancies include, but not limited to:
