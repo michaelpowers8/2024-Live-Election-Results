@@ -38,7 +38,10 @@ I can only provide county data for select swing states as my computer will strug
 
 <!-- end of the list -->
 
-The programs have been tested and function properly on https://www.cnn.com/election/2020/results/president\
+The programs have been tested and function properly on the following websites:
+- https://www.azcentral.com/elections/results/2024-11-05/race/0/arizona
+- https://www.nbcnews.com/politics/2024-elections/michigan-president-results
+- https://enr.elections.virginia.gov/results/public/Virginia/elections/2024NovemberGeneral/ballot-items/01000000-c7a0-1ae0-1363-08dcde4d9d9f
 This data upon collection will be published where it can then be analyzed by anybody who cares to see it. This will give everyon an opportunity to see the entire picture of exactly what happened in this election from strictly a numbers standpoint. \
 \
 DISCRETIONS:
